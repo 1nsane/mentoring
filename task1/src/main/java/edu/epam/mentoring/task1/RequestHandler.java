@@ -1,65 +1,91 @@
 package edu.epam.mentoring.task1;
 
 import edu.epam.mentoring.DBHandler;
+import edu.epam.mentoring.HashMapDBHandler;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
  * Created by Yevgeniy_Vtulkin on 7/11/2016.
  */
-public class RequestHandler {
-    private HttpServletRequest httpRequest;
-    private HttpServletResponse httpResponse;
+public class RequestHandler extends HttpServlet {
     private DBHandler db;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        try {
+            db = new HashMapDBHandler();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     private final String[] dictionary = {"компьютер", "рюкзак", "монитор"};
 
-    public RequestHandler(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws SQLException {
-        db = new DBHandler();
-        this.httpRequest = httpRequest;
-        this.httpResponse = httpResponse;
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            proceedRequest(req, resp);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void proceedRequest() throws IOException, SQLException {
-        String action = httpRequest.getParameter("action");
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            proceedRequest(req, resp);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void proceedRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+        String action = req.getParameter("action");
         if (isEmptySrting(action)) {
-            httpResponse.getWriter().println("action parameter is not defined");
+            resp.getWriter().println("action parameter is not defined");
             return;
         }
         switch (action) {
             case "save":
-                save();
+                save(req, resp);
                 break;
             case "censorship":
-                censorship();
+                censorship(req, resp);
                 break;
             case "dictionary":
-                dictionary();
+                dictionary(req, resp);
                 break;
             default:
-                httpResponse.getWriter().println("action parameter defined incorrectly");
+                resp.getWriter().println("action parameter defined incorrectly");
         }
     }
 
-    private void save() throws IOException, SQLException {
-        String text = httpRequest.getParameter("text");
-        if (isEmptySrting(text)) {
-            httpResponse.getWriter().println("text parameter is not defined");
+    private void save(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+        int id = parseId(req, resp);
+        if (id < 0) {
             return;
         }
-        db.saveToDB(text);
-        httpResponse.getWriter().println("saved to db");
+        String text = req.getParameter("text");
+        if (isEmptySrting(text)) {
+            resp.getWriter().println("text parameter is not defined");
+            return;
+        }
+        db.saveToDB(id, text);
+        resp.getWriter().println("saved to db");
     }
 
-    private void censorship() throws IOException, SQLException {
-        String textForChange = getTextById();
+    private void censorship(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+        String textForChange = getTextById(req, resp);
         if (textForChange == null) {
             return;
         }
@@ -71,18 +97,18 @@ public class RequestHandler {
                 resultText = resultText.replaceFirst(word, generateCensore(word));
             }
         }
-        httpResponse.getWriter().println("Source text: " + textForChange);
-        httpResponse.getWriter().println("<br>Result text: " + resultText);
+        resp.getWriter().println("Source text: " + textForChange);
+        resp.getWriter().println("<br>Result text: " + resultText);
     }
 
-    private void dictionary() throws IOException, SQLException {
-        String textForChange = getTextById();
+    private void dictionary(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+        String textForChange = getTextById(req, resp);
         if (textForChange == null) {
             return;
         }
-        String dictionaryList = httpRequest.getParameter("list");
+        String dictionaryList = req.getParameter("list");
         if (isEmptySrting(dictionaryList)) {
-            httpResponse.getWriter().println("text with such id does not exist");
+            resp.getWriter().println("list parameter is empty");
             return;
         }
         String resultText = textForChange;
@@ -91,29 +117,36 @@ public class RequestHandler {
         while(resultText.matches(".*(" + dictionaryRegex + ").*")) {
             resultText = resultText.replaceFirst(dictionaryRegex, getRandomString(list));
         }
-        httpResponse.getWriter().println("Source text: " + textForChange);
-        httpResponse.getWriter().println("<br>Result text: " + resultText);
+        resp.getWriter().println("Source text: " + textForChange);
+        resp.getWriter().println("<br>Result text: " + resultText);
     }
 
-    private String getTextById() throws IOException, SQLException {
-        int intId;
-        String id = httpRequest.getParameter("id");
+    private String getTextById(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+        int id = parseId(req, resp);
+        if (id < 0) {
+            return null;
+        }
+        String textForChange = db.getById(id);
+        if (textForChange == null) {
+            resp.getWriter().println("text with such id does not exist");
+            return null;
+        }
+        return textForChange;
+    }
+
+    private Integer parseId(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int intId = -1;
+        String id = req.getParameter("id");
         if (isEmptySrting(id)) {
-            httpResponse.getWriter().println("text id parameter is not defined");
+            resp.getWriter().println("text id parameter is not defined");
             return null;
         }
         try {
             intId = Integer.parseInt(id);
         } catch (NumberFormatException e) {
-            httpResponse.getWriter().println("text id parameter defined incorrectly");
-            return null;
+            resp.getWriter().println("text id parameter defined incorrectly");
         }
-        String textForChange = db.getById(intId);
-        if (textForChange == null) {
-            httpResponse.getWriter().println("text with such id does not exist");
-            return null;
-        }
-        return textForChange;
+        return intId;
     }
 
     private String generateCensore(String source) {
