@@ -19,17 +19,18 @@ public class DBHandler {
     private final String INSERT = "INSERT INTO MENTORING (TEXT) VALUES (?)";
 
     public void loadDataFromCSV(String source) throws ClassNotFoundException, SQLException {
-        conn.createStatement().execute(LOAD_FROM_CSV);
+//        conn.createStatement().execute(LOAD_FROM_CSV);
     }
 
-    public void pushToDB(String data) throws SQLException {
-        conn.createStatement().executeUpdate(INSERT);
+    public void saveToDB(String data) throws SQLException {
+//        conn.createStatement().executeUpdate(INSERT);
     }
 
     public String getById(int id) throws SQLException {
-        ResultSet rs = conn.createStatement().executeQuery(GET_BY_ID + id);
-        if (rs.next())
-            return rs.getString("TEXT");
-        return null;
+//        ResultSet rs = conn.createStatement().executeQuery(GET_BY_ID + id);
+//        if (rs.next())
+//            return rs.getString("TEXT");
+//        return null;
+        return "компьютер дом стакан рюкзак рюкзак монитор";
     }
 }

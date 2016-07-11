@@ -27,9 +27,9 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="h2database" target="1.5" />
-      <module name="mentoring" target="1.5" />
-      <module name="task1" target="1.5" />
+      <module name="h2database" target="1.8" />
+      <module name="mentoring" target="1.8" />
+      <module name="task1" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
