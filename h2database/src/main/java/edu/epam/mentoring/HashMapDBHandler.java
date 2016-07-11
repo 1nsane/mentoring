@@ -11,15 +11,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HashMapDBHandler implements DBHandler {
     private ConcurrentHashMap<Integer, String> dbMap;
 
-    public HashMapDBHandler() throws SQLException {
+    public HashMapDBHandler() throws Exception {
         dbMap = new ConcurrentHashMap<>();
     }
 
-    public void saveToDB(int id, String data) throws SQLException {
+    public void saveToDB(int id, String data) throws Exception {
         dbMap.put(id, data);
     }
 
-    public String getById(int id) throws SQLException {
+    public String getById(int id) throws Exception {
         return dbMap.get(id);
     }
 }

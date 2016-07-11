@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by Yevgeniy_Vtulkin on 7/11/2016.
  */
 public interface DBHandler {
-    void saveToDB(int id, String data) throws SQLException;
+    void saveToDB(int id, String data) throws Exception;
 
-    String getById(int id) throws SQLException;
+    String getById(int id) throws Exception;
 }
 

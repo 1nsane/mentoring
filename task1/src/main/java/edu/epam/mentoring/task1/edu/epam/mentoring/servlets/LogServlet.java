@@ -12,7 +12,6 @@ import java.io.IOException;
 public class LogServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
         resp.getWriter().println("log of 2+2 is " + Math.log(2+2));
     }
 }

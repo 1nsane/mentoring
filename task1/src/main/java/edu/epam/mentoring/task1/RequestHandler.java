@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Yevgeniy_Vtulkin on 7/11/2016.
  */
+@Deprecated
 public class RequestHandler extends HttpServlet {
     private DBHandler db;
 
@@ -24,7 +25,7 @@ public class RequestHandler extends HttpServlet {
         super.init();
         try {
             db = new HashMapDBHandler();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -35,7 +36,7 @@ public class RequestHandler extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             proceedRequest(req, resp);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -44,12 +45,12 @@ public class RequestHandler extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             proceedRequest(req, resp);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void proceedRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+    private void proceedRequest(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String action = req.getParameter("action");
         if (isEmptySrting(action)) {
             resp.getWriter().println("action parameter is not defined");
@@ -70,7 +71,7 @@ public class RequestHandler extends HttpServlet {
         }
     }
 
-    private void save(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+    private void save(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         int id = parseId(req, resp);
         if (id < 0) {
             return;
@@ -84,7 +85,7 @@ public class RequestHandler extends HttpServlet {
         resp.getWriter().println("saved to db");
     }
 
-    private void censorship(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+    private void censorship(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String textForChange = getTextById(req, resp);
         if (textForChange == null) {
             return;
@@ -101,7 +102,7 @@ public class RequestHandler extends HttpServlet {
         resp.getWriter().println("<br>Result text: " + resultText);
     }
 
-    private void dictionary(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+    private void dictionary(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String textForChange = getTextById(req, resp);
         if (textForChange == null) {
             return;
@@ -121,7 +122,7 @@ public class RequestHandler extends HttpServlet {
         resp.getWriter().println("<br>Result text: " + resultText);
     }
 
-    private String getTextById(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+    private String getTextById(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         int id = parseId(req, resp);
         if (id < 0) {
             return null;
