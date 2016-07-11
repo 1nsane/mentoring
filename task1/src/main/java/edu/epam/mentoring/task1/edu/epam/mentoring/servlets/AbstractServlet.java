@@ -18,17 +18,7 @@ import java.util.stream.Collectors;
  * Created by Yevgeniy_Vtulkin on 7/11/2016.
  */
 public abstract class AbstractServlet extends HttpServlet {
-    protected DBHandler db;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        try {
-            db = new HashMapDBHandler();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    protected static DBHandler db = new HashMapDBHandler();
 
     protected boolean isEmptySrting(String str) {
         return str == null || str.isEmpty();

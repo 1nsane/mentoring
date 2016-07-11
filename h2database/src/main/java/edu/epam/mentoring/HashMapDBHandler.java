@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HashMapDBHandler implements DBHandler {
     private ConcurrentHashMap<Integer, String> dbMap;
 
-    public HashMapDBHandler() throws Exception {
+    public HashMapDBHandler() {
         dbMap = new ConcurrentHashMap<>();
     }
 

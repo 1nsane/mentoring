@@ -14,6 +14,8 @@ import java.sql.SQLException;
 public class SaveServlet extends AbstractServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        resp.setCharacterEncoding("utf-8");
         int id = Helper.parseInt(req.getParameter("id"));
         if (id < 0) {
             resp.getWriter().println("id format is incorrect");
