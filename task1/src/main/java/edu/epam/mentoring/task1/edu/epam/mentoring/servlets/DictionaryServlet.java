@@ -1,5 +1,7 @@
 package edu.epam.mentoring.task1.edu.epam.mentoring.servlets;
 
+import edu.epam.mentoring.task1.edu.epam.mentoring.util.Helper;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,8 +14,6 @@ import java.util.Random;
 public class DictionaryServlet extends AbstractTextServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("utf-8");
-        resp.setCharacterEncoding("utf-8");
         String sourceText = null;
         try {
             sourceText = getTextById(req, resp);
@@ -36,7 +36,7 @@ public class DictionaryServlet extends AbstractTextServlet {
 
     private String[] getDictionaryList(HttpServletRequest req) {
         String list = req.getParameter("list");
-        return !isEmptySrting(list) ? list.split("\\s*,\\s*") : null;
+        return !Helper.isEmptyString(list) ? list.split("\\s*,\\s*") : null;
     }
 
     private String getRandomString(String[] list) {

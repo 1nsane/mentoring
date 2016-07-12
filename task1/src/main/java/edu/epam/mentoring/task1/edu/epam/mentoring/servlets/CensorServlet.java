@@ -12,8 +12,6 @@ import java.sql.SQLException;
 public class CensorServlet extends AbstractTextServlet  {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("utf-8");
-        resp.setCharacterEncoding("utf-8");
         String textForChange = null;
         try {
             textForChange = getTextById(req, resp);

@@ -19,8 +19,4 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractServlet extends HttpServlet {
     protected static DBHandler db = new HashMapDBHandler();
-
-    protected boolean isEmptySrting(String str) {
-        return str == null || str.isEmpty();
-    }
 }

@@ -87,6 +87,7 @@ public class RequestHandler extends HttpServlet {
 
     private void censorship(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String textForChange = getTextById(req, resp);
+        textForChange.replaceAll(dictionaryRegex(), "***");
         if (textForChange == null) {
             return;
         }
@@ -95,7 +96,7 @@ public class RequestHandler extends HttpServlet {
         String[] words = textForChange.split("[\\s]+");
         for (String word : words) {
             if (word.matches("^(" + dictionaryRegex + ")$")) {
-                resultText = resultText.replaceFirst(word, generateCensore(word));
+                resultText = resultText.replaceAll(word, generateCensore(word));
             }
         }
         resp.getWriter().println("Source text: " + textForChange);

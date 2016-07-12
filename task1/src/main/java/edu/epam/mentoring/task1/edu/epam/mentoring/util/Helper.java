@@ -13,4 +13,8 @@ public final class Helper {
         }
         return intId;
     }
+
+    public static boolean isEmptyString(String str) {
+        return str == null || str.isEmpty();
+    }
 }
