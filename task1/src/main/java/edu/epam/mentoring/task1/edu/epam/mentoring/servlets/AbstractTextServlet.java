@@ -10,7 +10,7 @@ import static java.util.stream.Collectors.joining;
 /**
  * Created by Yevgeniy_Vtulkin on 7/12/2016.
  */
-public class AbstractTextServlet extends AbstractServlet {
+public abstract class AbstractTextServlet extends AbstractServlet {
     protected final String[] dictionary = {"компьютер", "рюкзак", "монитор"};
 
     protected String getTextById(HttpServletRequest req, HttpServletResponse resp) throws Exception {
