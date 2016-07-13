@@ -5,13 +5,11 @@ package edu.epam.mentoring.task1.edu.epam.mentoring.util;
  */
 public final class Helper {
     public static int parseInt(String str) {
-        int intId = -1;
         try {
-            intId = Integer.parseInt(str);
+            return Integer.parseInt(str);
         } catch (NumberFormatException e) {
             throw new RuntimeException("int is not int");
         }
-        return intId;
     }
 
     public static boolean isEmptyString(String str) {

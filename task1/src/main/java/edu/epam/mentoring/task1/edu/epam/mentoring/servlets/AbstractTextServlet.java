@@ -1,7 +1,10 @@
 package edu.epam.mentoring.task1.edu.epam.mentoring.servlets;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 import static edu.epam.mentoring.task1.edu.epam.mentoring.util.Helper.parseInt;
 import static java.util.Arrays.asList;
@@ -13,15 +16,11 @@ import static java.util.stream.Collectors.joining;
 public abstract class AbstractTextServlet extends AbstractServlet {
     protected final String[] dictionary = {"компьютер", "рюкзак", "монитор"};
 
-    protected String getTextById(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        int id = parseInt(req.getParameter("id"));
-        if (id < 0) {
-            return null;
-        }
+    protected String getTextById(String strId) throws Exception {
+        int id = parseInt(strId);
         String textForChange = db.getById(id);
         if (textForChange == null) {
-            resp.getWriter().println("text with such id does not exist");
-            return null;
+            throw new IOException("text with such id does not exist");
         }
         return textForChange;
     }

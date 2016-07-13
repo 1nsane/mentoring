@@ -19,4 +19,19 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractServlet extends HttpServlet {
     protected static DBHandler db = new HashMapDBHandler();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doRequest(req, resp);
+    }
+
+    protected void doRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            doProcess(req, resp);
+        } catch (Exception e) {
+            resp.getWriter().println(e.getMessage());
+        }
+    }
+
+    protected abstract void doProcess(HttpServletRequest req, HttpServletResponse resp) throws Exception;
 }

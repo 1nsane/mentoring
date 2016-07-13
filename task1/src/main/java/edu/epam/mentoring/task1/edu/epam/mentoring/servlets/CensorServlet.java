@@ -4,7 +4,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Created by Yevgeniy_Vtulkin on 7/11/2016.
@@ -14,7 +13,7 @@ public class CensorServlet extends AbstractTextServlet  {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String textForChange = null;
         try {
-            textForChange = getTextById(req, resp);
+            textForChange = getTextById(req.getParameter("id"));
         } catch (Exception e) {
             e.printStackTrace();
         }
