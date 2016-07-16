@@ -10,17 +10,11 @@ import java.io.IOException;
  */
 public class CensorServlet extends AbstractTextServlet  {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String textForChange = null;
-        try {
-            textForChange = getTextById(req.getParameter("id"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (textForChange == null) {
-            return;
-        }
+    protected void doProcess(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        String textForChange = getTextById(req.getParameter("id"));
+
         String resultText = textForChange.replaceAll(dictionaryRegex(), "***");
+
         resp.getWriter().println("Source text: " + textForChange);
         resp.getWriter().println("<br>Result text: " + resultText);
     }

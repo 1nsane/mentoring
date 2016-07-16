@@ -8,7 +8,7 @@ public final class Helper {
         try {
             return Integer.parseInt(str);
         } catch (NumberFormatException e) {
-            throw new RuntimeException("int is not int");
+            throw new RuntimeException("incorrect integer parameter format");
         }
     }
 

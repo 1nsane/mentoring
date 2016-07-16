@@ -10,11 +10,11 @@ import java.util.Random;
  * Created by Yevgeniy_Vtulkin on 7/11/2016.
  */
 public class DictionaryServlet extends AbstractTextServlet {
-
     @Override
     protected void doProcess(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String sourceText = getTextById(req.getParameter("id"));
         String[] list = getDictionaryList(req);
+
         if (list == null || list.length == 0) {
             throw new IllegalArgumentException("empty list parameter");
         }

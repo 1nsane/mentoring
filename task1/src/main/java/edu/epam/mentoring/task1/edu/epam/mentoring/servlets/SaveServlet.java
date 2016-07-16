@@ -12,24 +12,19 @@ import java.io.IOException;
  */
 public class SaveServlet extends AbstractServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doProcess(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         int id = Helper.parseInt(req.getParameter("id"));
         if (id < 0) {
-            resp.getWriter().println("id format is incorrect");
-            return;
+            throw new IllegalArgumentException("id format is incorrect");
         }
+
         String text = req.getParameter("text");
         if (Helper.isEmptyString(text)) {
-            resp.getWriter().println("text format is incorrect");
-            return;
+            throw new IllegalArgumentException("text format is incorrect");
         }
-        try {
-            db.saveToDB(id, text);
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp.getWriter().println("can't save to database");
-            return;
-        }
+
+        db.saveToDB(id, text);
+
         resp.getWriter().println("saved to database");
     }
 }
