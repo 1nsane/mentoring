@@ -25,6 +25,11 @@ public abstract class AbstractServlet extends HttpServlet {
         doRequest(req, resp);
     }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doRequest(req, resp);
+    }
+
     protected void doRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             doProcess(req, resp);
