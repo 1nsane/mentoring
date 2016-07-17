@@ -1,10 +1,10 @@
 package edu.epam.mentoring.task1;
 
-import edu.epam.mentoring.task1.edu.epam.mentoring.filters.ServletEncodingFilter;
-import edu.epam.mentoring.task1.edu.epam.mentoring.servlets.CensorServlet;
-import edu.epam.mentoring.task1.edu.epam.mentoring.servlets.DictionaryServlet;
-import edu.epam.mentoring.task1.edu.epam.mentoring.servlets.LogServlet;
-import edu.epam.mentoring.task1.edu.epam.mentoring.servlets.SaveServlet;
+import edu.epam.mentoring.task1.filters.ServletEncodingFilter;
+import edu.epam.mentoring.task1.servlets.CensorServlet;
+import edu.epam.mentoring.task1.servlets.DictionaryServlet;
+import edu.epam.mentoring.task1.servlets.LogServlet;
+import edu.epam.mentoring.task1.servlets.SaveServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 

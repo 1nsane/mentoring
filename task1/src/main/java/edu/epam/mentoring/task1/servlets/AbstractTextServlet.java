@@ -1,12 +1,9 @@
-package edu.epam.mentoring.task1.edu.epam.mentoring.servlets;
+package edu.epam.mentoring.task1.servlets;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import edu.epam.mentoring.task1.util.Helper;
 
 import java.io.IOException;
 
-import static edu.epam.mentoring.task1.edu.epam.mentoring.util.Helper.parseInt;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
@@ -17,7 +14,7 @@ public abstract class AbstractTextServlet extends AbstractServlet {
     protected final String[] dictionary = {"компьютер", "рюкзак", "монитор"};
 
     protected String getTextById(String strId) throws Exception {
-        int id = parseInt(strId);
+        int id = Helper.parseInt(strId);
         String textForChange = null;
 
         try {

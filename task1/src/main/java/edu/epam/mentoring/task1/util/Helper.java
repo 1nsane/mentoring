@@ -1,4 +1,4 @@
-package edu.epam.mentoring.task1.edu.epam.mentoring.util;
+package edu.epam.mentoring.task1.util;
 
 /**
  * Created by Yevgeniy_Vtulkin on 7/11/2016.

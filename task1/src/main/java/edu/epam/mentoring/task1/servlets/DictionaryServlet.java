@@ -1,6 +1,6 @@
-package edu.epam.mentoring.task1.edu.epam.mentoring.servlets;
+package edu.epam.mentoring.task1.servlets;
 
-import edu.epam.mentoring.task1.edu.epam.mentoring.util.Helper;
+import edu.epam.mentoring.task1.util.Helper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

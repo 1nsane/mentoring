@@ -1,11 +1,10 @@
-package edu.epam.mentoring.task1.edu.epam.mentoring.servlets;
+package edu.epam.mentoring.task1.servlets;
 
-import edu.epam.mentoring.task1.edu.epam.mentoring.util.Helper;
+import edu.epam.mentoring.task1.servlets.AbstractServlet;
+import edu.epam.mentoring.task1.util.Helper;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Created by Yevgeniy_Vtulkin on 7/11/2016.

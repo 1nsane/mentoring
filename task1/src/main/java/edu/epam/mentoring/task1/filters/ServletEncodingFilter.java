@@ -1,4 +1,4 @@
-package edu.epam.mentoring.task1.edu.epam.mentoring.filters;
+package edu.epam.mentoring.task1.filters;
 
 import javax.servlet.*;
 import java.io.IOException;

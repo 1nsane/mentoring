@@ -1,4 +1,4 @@
-package edu.epam.mentoring.task1.edu.epam.mentoring.servlets;
+package edu.epam.mentoring.task1.servlets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
