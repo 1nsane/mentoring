@@ -18,7 +18,14 @@ public abstract class AbstractTextServlet extends AbstractServlet {
 
     protected String getTextById(String strId) throws Exception {
         int id = parseInt(strId);
-        String textForChange = db.getById(id);
+        String textForChange = null;
+
+        try {
+            textForChange = db.getById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("a database error occurred");
+        }
+
         if (textForChange == null) {
             throw new IOException("text with such id does not exist");
         }

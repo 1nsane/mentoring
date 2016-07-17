@@ -23,7 +23,11 @@ public class SaveServlet extends AbstractServlet {
             throw new IllegalArgumentException("text format is incorrect");
         }
 
-        db.saveToDB(id, text);
+        try {
+            db.saveToDB(id, text);
+        } catch (Exception e) {
+            throw new RuntimeException("an error occurred while saving to database");
+        }
 
         resp.getWriter().println("saved to database");
     }
