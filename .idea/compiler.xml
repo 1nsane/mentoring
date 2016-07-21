@@ -24,12 +24,14 @@
         <processorPath useClasspath="true" />
         <module name="h2database" />
         <module name="task1" />
+        <module name="task3" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="h2database" target="1.8" />
       <module name="mentoring" target="1.8" />
       <module name="task1" target="1.8" />
+      <module name="task3" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -11,6 +11,7 @@
 
     <modules>
         <module>task1</module>
+        <module>task3</module>
         <module>h2database</module>
     </modules>
 
