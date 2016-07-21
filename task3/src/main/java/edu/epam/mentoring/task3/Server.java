@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Server {
 
@@ -17,6 +18,7 @@ public class Server {
     private Socket socket;
     private DataOutputStream os;
     private DataInputStream is;
+    private ReentrantLock lock = new ReentrantLock();
 
     public Server(int port) {
         this.port = port;
@@ -39,16 +41,32 @@ public class Server {
             int length = is.readInt();
             byte[] bytes = new byte[length];
             is.readFully(bytes);
-            new Thread(() -> calcSentence(bytes)).start();
+            int index = i;
+            new Thread(() -> calcSentence(bytes, index)).start();
         }
     }
 
-    private void calcSentence(byte[] bytes) {
+    private void calcSentence(byte[] bytes, int index) {
         String str = new String(bytes).intern();
+        int big = 0;
+        int small = 0;
         for (String word : str.split(" ")) {
-            if (word.length() < 4) {
+            if (word.length() <= 4) {
                 cache.add(word);
+                small++;
+            } else {
+                big++;
             }
+        }
+        try {
+            lock.lock();
+            os.writeInt(index);
+            os.writeInt(big);
+            os.writeInt(small);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
         }
     }
 
