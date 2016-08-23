@@ -5,10 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Server {
@@ -21,6 +18,8 @@ public class Server {
     private DataOutputStream os;
     private DataInputStream is;
     private ReentrantLock lock = new ReentrantLock();
+    private BlockingQueue<Runnable> tasks = new ArrayBlockingQueue<>(10);
+    private ExecutorService service = Executors.newFixedThreadPool(5);
 
     public Server(int port) {
         this.port = port;
@@ -32,13 +31,24 @@ public class Server {
         os = new DataOutputStream(socket.getOutputStream());
         is = new DataInputStream(socket.getInputStream());
 
+        for (int i = 0; i < 5; i++) {
+            service.execute(() -> {
+                while (true) {
+                    try {
+                        Runnable task = tasks.take();
+                        task.run();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+
         while (true) {
             readMessage();
         }
     }
-
-    private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(10);
-    private ExecutorService service = new ThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, queue);
 
     private void readMessage() throws IOException {
         int count = is.readInt();
@@ -47,7 +57,11 @@ public class Server {
             byte[] bytes = new byte[length];
             is.readFully(bytes);
             int index = i;
-            service.execute(() -> calcSentence(bytes, index));
+            try {
+                tasks.put(() -> calcSentence(bytes, index));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -64,7 +78,7 @@ public class Server {
                 big++;
             }
         }
-        synchronized (this) {
+       /* synchronized (this) {
             try {
                 os.writeInt(index);
                 os.writeInt(big);
@@ -72,14 +86,17 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-/*        try {
+        }*/
+        try {
             lock.lock();
+            os.writeInt(index);
+            os.writeInt(big);
+            os.writeInt(small);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             lock.unlock();
-        }*/
+        }
     }
 
     public static void main(String[] args) throws IOException {
