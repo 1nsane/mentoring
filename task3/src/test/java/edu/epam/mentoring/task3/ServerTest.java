@@ -32,8 +32,10 @@ public class ServerTest {
 
         int length = 1000 + count;
         for (int j = 0; j < count; j++) {
-            os.writeInt(length);
-            os.writeBytes(makeString(length));
+            String str = makeString(length);
+            byte[] bytes = str.getBytes();
+            os.writeInt(bytes.length);
+            os.write(bytes);
         }
     }
 

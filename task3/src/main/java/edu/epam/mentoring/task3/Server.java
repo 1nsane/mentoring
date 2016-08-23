@@ -7,11 +7,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Server {
 
-    private static final Set<String> cache = new HashSet<>();
+//    private static final Set<String> cache = new HashSet<>();
 
     private int port;
     private ServerSocket server;
@@ -35,6 +37,9 @@ public class Server {
         }
     }
 
+    private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(10);
+    private ExecutorService service = new ThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, queue);
+
     private void readMessage() throws IOException {
         int count = is.readInt();
         for (int i = 0; i < count; i++) {
@@ -42,32 +47,39 @@ public class Server {
             byte[] bytes = new byte[length];
             is.readFully(bytes);
             int index = i;
-            new Thread(() -> calcSentence(bytes, index)).start();
+            service.execute(() -> calcSentence(bytes, index));
         }
     }
 
     private void calcSentence(byte[] bytes, int index) {
-        String str = new String(bytes).intern();
+//        String str = new String(bytes).intern();
+        String str = new String(bytes);
         int big = 0;
         int small = 0;
         for (String word : str.split(" ")) {
             if (word.length() <= 4) {
-                cache.add(word);
+//                cache.add(word);
                 small++;
             } else {
                 big++;
             }
         }
-        try {
+        synchronized (this) {
+            try {
+                os.writeInt(index);
+                os.writeInt(big);
+                os.writeInt(small);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+/*        try {
             lock.lock();
-            os.writeInt(index);
-            os.writeInt(big);
-            os.writeInt(small);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             lock.unlock();
-        }
+        }*/
     }
 
     public static void main(String[] args) throws IOException {
