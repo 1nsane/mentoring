@@ -9,9 +9,9 @@ import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Server {
-    private static final int POOL_SIZE = 50;
+    private static final int POOL_SIZE = 5;
     private static final int BYTES_PER_THREAD = 2000;
-    private static final int BUFFER_SIZE = POOL_SIZE * BYTES_PER_THREAD * 2;
+    private static final int BUFFER_SIZE = POOL_SIZE * BYTES_PER_THREAD;
 
     private final byte[] bytes = new byte[BUFFER_SIZE];
 
@@ -21,7 +21,8 @@ public class Server {
     private DataOutputStream os;
     private DataInputStream is;
 //    private ReentrantLock lock = new ReentrantLock();
-    private BlockingQueue<Runnable> tasks = new ArrayBlockingQueue<>(POOL_SIZE);
+    private BlockingQueue<Integer> tasks = new ArrayBlockingQueue<>(POOL_SIZE);
+    private BlockingQueue<Integer> freeOffsets = new ArrayBlockingQueue<>(POOL_SIZE);
     private ExecutorService service = Executors.newFixedThreadPool(POOL_SIZE);
 
     public Server(int port) {
@@ -29,17 +30,22 @@ public class Server {
     }
 
     public void start() throws IOException {
+        for (int i = 0; i < POOL_SIZE; i++) {
+            freeOffsets.add(i * BYTES_PER_THREAD);
+        }
+
         server = new ServerSocket(port);
         socket = server.accept();
         os = new DataOutputStream(socket.getOutputStream());
         is = new DataInputStream(socket.getInputStream());
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < POOL_SIZE; i++) {
             service.execute(() -> {
                 while (true) {
                     try {
-                        Runnable task = tasks.take();
-                        task.run();
+                        Integer offset = tasks.take();
+                        calcSentence(offset);
+                        freeOffsets.put(offset);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -55,12 +61,11 @@ public class Server {
     private void readMessage() throws IOException {
         int count = is.readInt();
         for (int i = 0; i < count; i++) {
-            int length = is.readInt();
-            int index = (i % (POOL_SIZE * 2));
-            int offset = index * BYTES_PER_THREAD;
-            is.readFully(bytes, offset, length);
             try {
-                tasks.put(() -> calcSentence(offset));
+                int length = is.readInt();
+                Integer offset = freeOffsets.take();
+                is.readFully(bytes, offset, length);
+                tasks.put(offset);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
