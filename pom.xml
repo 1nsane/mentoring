@@ -13,8 +13,6 @@
         <module>task1</module>
         <module>task3</module>
         <module>h2database</module>
-        <module>task4agent</module>
-        <module>task4patient</module>
         <module>task5</module>
         <module>task4</module>
     </modules>
