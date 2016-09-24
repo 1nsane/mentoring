@@ -15,6 +15,7 @@
         <module>h2database</module>
         <module>task5</module>
         <module>task4</module>
+        <module>task8</module>
     </modules>
 
     <build>
