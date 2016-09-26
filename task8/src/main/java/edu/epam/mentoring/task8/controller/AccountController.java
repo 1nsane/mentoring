@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -27,13 +28,11 @@ public class AccountController {
     private AccountService accountService;
 
     @RequestMapping(method = POST)
-    public String createOrEditAccount(@ModelAttribute("account") Account account,
-                                Model model, BindingResult bindingResult) {
+    public ModelAndView createOrEditAccount(@ModelAttribute("account") Account account, BindingResult bindingResult) {
         accountValidator.validate(account, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("account", account);
-            return "account-form";
+            return new ModelAndView("account-form", "account", account);
         }
 
         Number id;
@@ -45,68 +44,60 @@ public class AccountController {
         }
 
         if (id == null || id.longValue() == 0) {
-            return "error";
+            return new ModelAndView("error");
         }
 
-        return "redirect:/account/" + id;
+        return new ModelAndView("redirect:/account/" + id);
     }
 
     @RequestMapping(method = GET)
-    public String accountForm(Model model) {
-        model.addAttribute("account", new Account());
-        return "account-form";
+    public ModelAndView accountForm() {
+        return new ModelAndView("account-form", "account", new Account());
     }
 
     @RequestMapping(value = "/{id}/remover", method = GET)
-    public String deleteAccountConfirm(@PathVariable long id, Model model) {
-        model.addAttribute("id", id);
-        return "delete-confirmation-form";
+    public ModelAndView deleteAccountConfirm(@PathVariable long id) {
+        return new ModelAndView("delete-confirmation-form", "id", id);
     }
 
     @RequestMapping(value = "/{id}/remover", method = POST)
-    public String deleteAccount(@PathVariable long id, Model model) {
+    public ModelAndView deleteAccount(@PathVariable long id) {
         if (!accountService.deleteById(id)) {
-            return "error";
+            return new ModelAndView("error");
         }
-        return "redirect:/account/list";
+        return new ModelAndView("redirect:/account/list");
     }
 
     @RequestMapping(value = "/{id}", method = GET)
-    public String getAccount(@PathVariable long id, Model model) {
-        model.addAttribute("account", accountService.getById(id));
-        return "account";
+    public ModelAndView getAccount(@PathVariable long id) {
+        return new ModelAndView("account", "account", accountService.getById(id));
     }
 
     @RequestMapping(value = "/{id}/editor", method = GET)
-    public String editAccount(@PathVariable long id, Model model) {
-        model.addAttribute("account", accountService.getById(id));
-        return "account-form";
+    public ModelAndView editAccount(@PathVariable long id) {
+        return new ModelAndView("account-form", "account", accountService.getById(id));
     }
 
     @RequestMapping(value = "/list", method = GET)
-    public String getAllAccounts(Model model) {
-        model.addAttribute("accounts", accountService.getAllAccounts());
-        return "accounts";
+    public ModelAndView getAllAccounts() {
+        return new ModelAndView("accounts", "accounts", accountService.getAllAccounts());
     }
 
     @RequestMapping(value = "/{id}/balance", method = GET)
-    public String editAccountBalanceForm(@PathVariable long id, Model model) {
-        model.addAttribute("account", accountService.getById(id));
-        return "account-balance-form";
+    public ModelAndView editAccountBalanceForm(@PathVariable long id) {
+        return new ModelAndView("account-balance-form", "account", accountService.getById(id));
     }
 
     @RequestMapping(value = "/{id}/balance", method = POST)
-    public String editAccountBalance(@ModelAttribute("account") @Validated Account account,
-                                     Model model, BindingResult bindingResult) {
+    public ModelAndView editAccountBalance(@ModelAttribute("account") Account account, BindingResult bindingResult) {
         accountValidator.validate(account, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("account", account);
-            return "account-balance-form";
+            return new ModelAndView("account-balance-form", "account", account);
         }
 
         accountService.update(account);
 
-        return "redirect:/account/" + account.getId();
+        return new ModelAndView("redirect:/account/" + account.getId());
     }
 }
