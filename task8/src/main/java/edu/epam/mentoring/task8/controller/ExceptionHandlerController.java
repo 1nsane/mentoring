@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.ModelAndView;
 
+import static edu.epam.mentoring.task8.util.ModelAndViewUtil.view;
+
 /**
  * Created by eugen on 23.09.2016.
  */
@@ -32,18 +34,18 @@ public class ExceptionHandlerController {
             MissingServletRequestPartException.class
     })
     public ModelAndView handleBadRequest(Exception e) {
-        return new ModelAndView("error", "message", messageSource.getMessage("error.bad_request", null, null));
+        return view("error", "message", messageSource.getMessage("error.bad_request", null, null));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException.class)
     public ModelAndView handleFormBadRequest(Exception e) {
-        return new ModelAndView("error", "message", messageSource.getMessage("error.form_number_invalid", null, null));
+        return view("error", "message", messageSource.getMessage("error.form_number_invalid", null, null));
     }
 
     @ExceptionHandler(Exception.class)
     public ModelAndView handleAnyException(Exception e) {
         String message = messageSource.getMessage("error.unknown_error", null, null) + "<br />" + e.getMessage();
-        return new ModelAndView("error", "message", message);
+        return view("error", "message", message);
     }
 }
