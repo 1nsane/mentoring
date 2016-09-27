@@ -8,13 +8,15 @@ import java.util.Arrays;
 /**
  * Created by eugen on 27.09.2016.
  */
-@Resource(name = "wordCountService")
 public class SentenceWordLengthCounter implements Service {
+    @Resource(name = "wordCountService")
+    private Service self;
+
     @Override
     @Logging
     public void doWork(String some) {
         doInternalWork("ololo");
-        Arrays.stream(some.split("\\s+")).map(this::doInternalWork).reduce(0, (e1, e2) -> e1 + e2);
+        Arrays.stream(some.split("\\s+")).map(self::doInternalWork).reduce(0, (e1, e2) -> e1 + e2);
     }
 
     @Override
