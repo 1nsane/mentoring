@@ -2,11 +2,13 @@ package edu.epam.mentoring.task7.service;
 
 import edu.epam.mentoring.task7.annotation.Logging;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 
 /**
  * Created by eugen on 27.09.2016.
  */
+@Resource(name = "wordCountService")
 public class SentenceWordLengthCounter implements Service {
     @Override
     @Logging

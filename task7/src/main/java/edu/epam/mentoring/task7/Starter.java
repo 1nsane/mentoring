@@ -9,7 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Starter {
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
-        Server server = (Server)context.getBean("Server");
+        Server server = (Server)context.getBean("server");
         server.start();
         context.registerShutdownHook();
     }
