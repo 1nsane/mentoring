@@ -4,6 +4,7 @@
     <weaver>
         <!-- only weave classes in our application-specific packages -->
         <include within="edu.epam.mentoring.task7.service.*"/>
+        <include within="edu.epam.mentoring.task7.aspect.*"/>
     </weaver>
 
     <aspects>
