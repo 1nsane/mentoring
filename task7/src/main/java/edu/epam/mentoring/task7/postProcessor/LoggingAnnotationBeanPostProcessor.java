@@ -27,7 +27,6 @@ public class LoggingAnnotationBeanPostProcessor implements BeanPostProcessor {
         if (!annotatedMethodNames.isEmpty()) {
             targetBeans.put(beanName, annotatedMethodNames);
         }
-
         return bean;
     }
 
@@ -39,12 +38,12 @@ public class LoggingAnnotationBeanPostProcessor implements BeanPostProcessor {
             Class beanClass = bean.getClass();
             return Proxy.newProxyInstance(beanClass.getClassLoader(), beanClass.getInterfaces(), (proxy, method, args) -> {
                 Object value = method.invoke(bean, args);
-                logger.info(beanClass.getSimpleName() + "." + method.getName() + "(\"" + args[0] + "\") start;");
-                logger.info(beanClass.getSimpleName() + "." + method.getName() + " finish" + (value == null ? "" : " with result = " + value) + ";");
+                String classNameAndMethodName = beanClass.getSimpleName() + "." + method.getName();
+                logger.info(classNameAndMethodName + "(\"" + args[0] + "\") start;");
+                logger.info(classNameAndMethodName + " finish" + (value == null ? "" : " with result = " + value) + ";");
                 return value;
             });
         }
-
         return bean;
     }
 
