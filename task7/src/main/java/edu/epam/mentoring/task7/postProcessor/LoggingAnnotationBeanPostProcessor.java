@@ -34,12 +34,11 @@ public class LoggingAnnotationBeanPostProcessor implements BeanPostProcessor {
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         List<String> annotatedMethodNames = targetBeans.get(beanName);
         if (annotatedMethodNames != null) {
-//            System.out.println(annotatedMethodNames.get(0) + " , " + annotatedMethodNames.get(1));
             Class beanClass = bean.getClass();
             return Proxy.newProxyInstance(beanClass.getClassLoader(), beanClass.getInterfaces(), (proxy, method, args) -> {
-                Object value = method.invoke(bean, args);
                 String classNameAndMethodName = beanClass.getSimpleName() + "." + method.getName();
                 logger.info(classNameAndMethodName + "(\"" + args[0] + "\") start;");
+                Object value = method.invoke(bean, args);
                 logger.info(classNameAndMethodName + " finish" + (value == null ? "" : " with result = " + value) + ";");
                 return value;
             });
