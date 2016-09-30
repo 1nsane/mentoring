@@ -20,20 +20,20 @@ public class LoggingAnnotationBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         Class clazz = bean.getClass();
-        List<String> annotatedMethodNames = getAnnotatedMethodsSignature(clazz);
-        if (!annotatedMethodNames.isEmpty()) {
-            targetBeans.put(beanName, annotatedMethodNames);
+        List<String> annotatedMethods = getAnnotatedMethodsSignature(clazz);
+        if (!annotatedMethods.isEmpty()) {
+            targetBeans.put(beanName, annotatedMethods);
         }
         return bean;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        List<String> annotatedMethodNames = targetBeans.get(beanName);
-        if (annotatedMethodNames != null) {
+        List<String> annotatedMethods = targetBeans.get(beanName);
+        if (annotatedMethods != null) {
             Class beanClass = bean.getClass();
             return Proxy.newProxyInstance(beanClass.getClassLoader(), beanClass.getInterfaces(), (proxy, method, args) -> {
-                if (annotatedMethodNames.contains(getMethodNameAndSignature(method))) {
+                if (annotatedMethods.contains(getMethodNameAndSignature(method))) {
                     String classNameAndMethodName = beanClass.getSimpleName() + "." + method.getName();
                     logger.info(classNameAndMethodName + "(\"" + args[0] + "\") start;");
                     Object value = method.invoke(bean, args);
