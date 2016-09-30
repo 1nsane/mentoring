@@ -47,13 +47,13 @@ public class LoggingAnnotationBeanPostProcessor implements BeanPostProcessor {
     }
 
     private List<String> getAnnotatedMethodsSignature(Class clazz) {
-        List<String> annotatedMethodNames = new ArrayList<>();
+        List<String> annotatedMethods = new ArrayList<>();
         for (Method method : clazz.getMethods()) {
             if (method.getAnnotation(Logging.class) != null) {
-                annotatedMethodNames.add(getMethodNameAndSignature(method));
+                annotatedMethods.add(getMethodNameAndSignature(method));
             }
         }
-        return annotatedMethodNames;
+        return annotatedMethods;
     }
 
     private String getMethodNameAndSignature(Method method) {
