@@ -7,10 +7,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by eugen on 27.09.2016.
@@ -23,7 +20,7 @@ public class LoggingAnnotationBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         Class clazz = bean.getClass();
-        List<String> annotatedMethodNames = classHasLoggingAnnotatedMethods(clazz);
+        List<String> annotatedMethodNames = getAnnotatedMethodsSignature(clazz);
         if (!annotatedMethodNames.isEmpty()) {
             targetBeans.put(beanName, annotatedMethodNames);
         }
@@ -36,23 +33,30 @@ public class LoggingAnnotationBeanPostProcessor implements BeanPostProcessor {
         if (annotatedMethodNames != null) {
             Class beanClass = bean.getClass();
             return Proxy.newProxyInstance(beanClass.getClassLoader(), beanClass.getInterfaces(), (proxy, method, args) -> {
-                String classNameAndMethodName = beanClass.getSimpleName() + "." + method.getName();
-                logger.info(classNameAndMethodName + "(\"" + args[0] + "\") start;");
-                Object value = method.invoke(bean, args);
-                logger.info(classNameAndMethodName + " finish" + (value == null ? "" : " with result = " + value) + ";");
-                return value;
+                if (annotatedMethodNames.contains(getMethodNameAndSignature(method))) {
+                    String classNameAndMethodName = beanClass.getSimpleName() + "." + method.getName();
+                    logger.info(classNameAndMethodName + "(\"" + args[0] + "\") start;");
+                    Object value = method.invoke(bean, args);
+                    logger.info(classNameAndMethodName + " finish" + (value == null ? "" : " with result = " + value) + ";");
+                    return value;
+                }
+                return method.invoke(bean, args);
             });
         }
         return bean;
     }
 
-    private List<String> classHasLoggingAnnotatedMethods(Class clazz) {
+    private List<String> getAnnotatedMethodsSignature(Class clazz) {
         List<String> annotatedMethodNames = new ArrayList<>();
         for (Method method : clazz.getMethods()) {
             if (method.getAnnotation(Logging.class) != null) {
-                annotatedMethodNames.add(method.getName());
+                annotatedMethodNames.add(getMethodNameAndSignature(method));
             }
         }
         return annotatedMethodNames;
+    }
+
+    private String getMethodNameAndSignature(Method method) {
+        return method.getName() + ";" + Arrays.toString(method.getParameterTypes());
     }
 }

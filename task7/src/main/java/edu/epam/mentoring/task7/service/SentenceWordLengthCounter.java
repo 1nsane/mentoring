@@ -16,16 +16,16 @@ import java.util.Arrays;
 /**
  * Created by eugen on 27.09.2016.
  */
-//@Component("wordCountService")
-//@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
+@Component("wordCountService")
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
 public class SentenceWordLengthCounter implements Service {
-//    @Autowired
+    @Autowired
     private Service self;
 
     @Override
     @Logging
     public void doWork(String some) {
-        Arrays.stream(some.split("\\s+")).map(this::doInternalWork).reduce(0, (e1, e2) -> e1 + e2);
+        Arrays.stream(some.split("\\s+")).map(self::doInternalWork).reduce(0, (e1, e2) -> e1 + e2);
     }
 
     @Override

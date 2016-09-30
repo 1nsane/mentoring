@@ -10,12 +10,12 @@
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
 
-    <context:load-time-weaver/>
+    <!--<context:load-time-weaver/>-->
 
-    <context:component-scan base-package="edu.epam.mentoring.task7.aspect"/>
-    <!--<context:component-scan base-package="edu.epam.mentoring.task7.service"/>-->
+    <!--<context:component-scan base-package="edu.epam.mentoring.task7.aspect"/>-->
+    <context:component-scan base-package="edu.epam.mentoring.task7.service"/>
 
-    <bean id="wordCountService" class="edu.epam.mentoring.task7.service.SentenceWordLengthCounter" />
+    <!--<bean id="wordCountService" class="edu.epam.mentoring.task7.service.SentenceWordLengthCounter" />-->
 
     <bean id="server" class="edu.epam.mentoring.task7.server.Server">
         <constructor-arg>
@@ -26,7 +26,7 @@
         <constructor-arg><value>This is test</value></constructor-arg>
     </bean>
 
-    <!--<bean class="edu.epam.mentoring.task7.postProcessor.LoggingAnnotationBeanPostProcessor" />-->
+    <bean class="edu.epam.mentoring.task7.postProcessor.LoggingAnnotationBeanPostProcessor" />
 
     <!--standard aspect approach-->
     <!--<bean id="logBeanAspect" class="edu.epam.mentoring.task7.aspect.LoggingAspect"/>-->
