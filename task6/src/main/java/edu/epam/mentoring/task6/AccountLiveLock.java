@@ -21,6 +21,9 @@ public class AccountLiveLock {
     }
 
     private boolean withdraw(double amount) {
+        //to avoid livelock the simpliest solution may be replacing .tryLock() with .lock() and then
+        //putting it into try {} block. In this case "return false" is not needed.
+        //The same situation is in the deposit() method
         if (lock.tryLock()) {
             try {
                 // Wait to simulate io like database access ...

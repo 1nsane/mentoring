@@ -36,6 +36,7 @@ public class DinerLivelock {
                 }
 
                 // If spouse is hungry, insist upon passing the spoon.
+                //the simpliest way to avoid livelock is to comment id flock below
                 if (spouse.isHungry()) {
 //                    logger.info(name + ": You eat first my darling");
                     spoon.setOwner(spouse);
